@@ -1,0 +1,67 @@
+﻿域,来源 / 子集,状态,目标条数,教师,瓶颈类型,入选规则
+A1,Agent-Ark/Toucan-1.5M · single-turn original+diversify,NEW,90000,Qwen3-32B / Kimi-K2 / GPT-OSS-120B,覆盖,495 个真实 MCP server、2000+ 工具；只取执行成功轨迹；必须重渲染成 Qwen3.6 原生 tool 格式；按 MCP server 分层，单 server 上限 2%
+A1,nvidia/Nemotron-SFT-Agentic-v2 · tool_calling,CAT,45000,DeepSeek-V3.2 / GLM-4.6,覆盖,"原料 707,052；按工具族 × 参数难度分层；去掉空 user、状态自相矛盾、schema 重复"
+A1,allenai/Dolci-Instruct-SFT · Tool Use,CAT,25000,未统一公开,覆盖,按 source_dataset 精确抽取；原生格式转换后校验参数类型
+A1,ToolMind（160k 合成 + 200k 增强）,NEW,20000,多智能体模拟,覆盖,20k+ 工具；只取带推理链的 assistant 轮；跨 Toucan 按工具签名去重
+A1,r0b0tlab/deepseek-v4-pro-0813-agentic,CAT,12000,DeepSeek-V4-Pro,推理,强教师，全量优先；domain=code_execution
+A1,HuggingFaceTB/smoltalk2 · toolcalling splits,CAT,5500,Qwen3-32B 等,覆盖,xlam/hermes/smolagents 三个 split；补短调用格式多样性
+A1,zake7749/deepseek-v4-pro-agent-tool-calling,CAT,2500,DeepSeek-V4-Pro,推理,全量
+A2,nvidia/Nemotron-SFT-Agentic-v2 · interactive_agent,CAT,40000,DeepSeek-V3.2 / GLM-4.6,覆盖,"原料 278,880；按 policy / 服务域分层；检查跨轮状态依赖一致"
+A2,ISE-Trace（Valiere01/ISE-Trace）,NEW,20000,live OS 执行 grounded,覆盖,"23,132 条，均 8.12 用户轮 / 68.24 总轮；论文报 Qwen3-8B ClawEval 19.3→37.7；正对模型多轮短板"
+A2,APIGen-MT / xLAM-2 多轮数据,NEW,15000,committee-reviewed blueprint,覆盖,tau-bench 同构；带 ground-truth action，可校验
+A2,RUC-AIBOX/ClawGym-Trajectory,CAT,12000,MiniMax-M2.5 / GLM-5.1,推理,强教师；与 A7 任务互斥
+A2,ukisai/Qwen3.8-27B-multi-turn-agent-sft,CAT,8000,Qwen3.8-27B,推理,强教师，全量近似
+A3,Agent-Ark/Toucan-1.5M · Ext.1 Irrelevance,NEW,18000,同 Toucan,覆盖,专治“该不该调用”；原料 40K
+A3,nvidia/When2Call · train_sft,LOCAL,12000,未公开,覆盖,"已落盘 15,000；只用 SFT split，排除偏好与测试集"
+A3,Nemotron-SFT-Agentic-v2 · 无调用 / 反问样本,CAT,5000,DeepSeek-V3.2 / GLM-4.6,覆盖,从 tool_calling 里筛正确“不调用/先澄清”的样本
+A4,simplex-ai-inc/LiteResearcher-SFT-Data,LOCAL,25000,未公开,覆盖,"已落盘 68,231；排除 BenchSeedQA；user 里的 observation 保持 masked"
+A4,openbmb/UltraData-SFT-Agent-2609 · Search_Agent-en,CAT,9000,按上游不同,覆盖,中英分层；跨 LiteResearcher 去重
+A4,rl-research/dr-tulu-sft-data,LOCAL,8000,未公开,覆盖,"已落盘 13,062；保留引用与工具语义"
+A4,PolarSeeker/OpenSeeker-v1-Data · result=Correct,LOCAL,7000,未公开,覆盖,"已落盘；原料 11,677 含 Incorrect，只取有效成功段"
+A4,SearchSwarm/SearchSwarm-SFT（bundle 展开后）,LOCAL,4000,未公开,覆盖,已落盘；4000 指展开后的 conversation 记录上限，不是 4000 个 bundle
+A4,nvidia/Nemotron-SFT-Agentic-v2 · search,CAT,2000,DeepSeek-V3.2 / GLM-4.6,覆盖,"原料仅 5,968，按任务去重"
+A5,nvidia/Nemotron-Terminal-Corpus · 环境操作,CAT,45000,未公开,覆盖,"原料 366,154；按环境 / 工具 / skill 家族分层，不只按终端字符串"
+A5,nvidia/Nemotron-SFT-OpenCode-v1 · bash_only splits,CAT,12000,GPT-OSS-120B / Qwen3-Coder-480B,覆盖,区分真实验证与文本评分；按工具协议适配
+A5,CLI-Gym（环境反演生成的 CLI 任务）,NEW,8000,未公开,覆盖,补终端任务多样性；按任务指纹去重
+A5,Lego-X/Terminal-Lego-Traj-8k,CAT,5000,未公开,覆盖,"原料 8,000，按 task 去重"
+A6,microsoft/Orchard · swe,NEW,15000,MiniMax-M2.5 83.8% / Qwen3.5-397B 16.2%,推理,整个 SWE 池里教师最强的一档；两种 harness、两种任务源
+A6,nvidia/Open-SWE-Traces · resolved=1,CAT,12000,DeepSeek-V4-Flash,推理,"原料 511,668，9 种语言；按 instance_id 跨 harness 合并；排除评测任务"
+A6,AweAI-Team/DeNovoSWE-Trajectory-Filtered,CAT,6000,DeepSeek-V4-High,推理,强教师；与 DeNovoSWE 原库按任务去重
+A6,open-thoughts/OpenThoughts-Agent-SFT-100K,CAT,5000,GLM-4.7-AWQ,推理,追溯任务来源；与 Orchard / Open-SWE 去重
+A6,zhiyuanhucs/agentic-sft-v4-teacher-v2,CAT,1200,DeepSeek-V4-Flash,推理,全量
+A6,blythet/deepseek-v4-flash-swe-cot,CAT,800,DeepSeek-V4-Flash-0731,推理,全量
+A7,openbmb/UltraData-SFT-Agent-2609 · General_Agent,CAT,15000,按上游不同,覆盖,先跨 harness 任务去重；域内不足不得用重复补齐
+A7,"SkillCorpus / SPT（38,040 个技能包）",NEW,12000,公开技能包，非模型生成,覆盖,论文报 30% 技能数据混通用 → agent 38.60，纯技能只有 22.06；按 Reference Insert 组装多文件包
+A7,ecnu-icalk/SkillGym,LOCAL,8000,Claude Code+V4-Pro / Codex+GPT-5.4 等,推理,已落盘 2.45G；全部经 verifier 验证；每任务最多 2 条
+A7,Aquiles-ai/Alexander-Agentic,CAT,6000,Claude Opus 4.8 / DeepSeek-V4-Pro,推理,强教师；按 model 字段逐条筛选
+A7,zjunlp/onedayagent_traj,CAT,1000,6 个主干后端模型,覆盖,全量；目录里唯一的 office 类
+A8,nvidia/Nemotron-Terminal-Corpus · data/file 四类,CAT,15000,未公开,覆盖,data_science / data_querying / data_processing / file_operations；与 A5 互斥
+A8,openbmb/UltraData-SFT-Agent-2609 · 网页与数据,CAT,5000,按上游不同,覆盖,与 A7 任务互斥
+A8,FineEnvs/data-agent-sft,LOCAL,4000,未公开,覆盖,"已落盘 4,677；数据卡声明 deterministic reward=1，行内未附 reward，记为源端声明"
+A8,luzimu/WebGen-Bench_train_data,CAT,1000,DeepSeek-V3,覆盖,"原料 1,206；WebGen-Bench 本体是评测集，不入池"
+A9,microsoft/Orchard · gui,NEW,3070,MiniMax-M2.5 / Qwen3.5-397B,覆盖,"3,070 条多模态浏览器 rollout，全量；目录里没有等价物，也同时充当视觉保持"
+A9,开源 GUI agent 截图轨迹（待选型）,NEW,1930,待定,覆盖,缺口项：目录与已下载数据都没有；需在服务器上确认可下载的 GUI 轨迹集
+G1,openbmb/UltraData-SFT-2605 · Chinese-general/no_think,CAT,160000,按上游不同,风格,不做 RL，中文只能靠 SFT 保；优先对话/写作/总结
+G1,openbmb/UltraData-SFT-2605 · Chinese-general/think,CAT,80000,按上游不同,风格,与 no_think 按 uid 去重；保留需要推理的中文任务
+G2,nvidia/Nemotron-SFT-Instruction-Following-Chat-v3 · IF,LOCAL,45000,GPT-OSS-120B,风格,已落盘 2.99G；只取 IF 子集，不要 chat；metadata.train_turns 映射 loss；约束自动核验
+G2,allenai/Dolci-Instruct-SFT · Precise IF,CAT,40000,未统一公开,风格,自动验证多约束；避免只学容易格式
+G2,openbmb/UltraData-SFT-2605 · IF,CAT,45000,按上游不同,风格,think / no_think 双模式都要覆盖，否则掉一个
+G2,HuggingFaceTB/smoltalk2 · IF splits,CAT,10000,Qwen3-32B 等,风格,只用 SFT，排除 Mid / Preference
+G3,nvidia/OpenMathReasoning · cot + tir,CAT,40000,DeepSeek-R1 / QwQ-32B,保持,教师弱于学生：只做 retention，1 遍，优先“短而正确”，不要长 CoT 覆盖学生自己的推理风格
+G3,openbmb/UltraData-SFT-2605 · Math,CAT,30000,按上游不同,保持,按题型 / 难度分层；与其它数学池去重
+G3,AI-MO/NuminaMath-TIR,CAT,12000,GPT-4o,保持,工具调用式数学，程序执行正确；算数学域不重复计 agent
+G3,zwhe99/DeepMath-103K,CAT,8000,DeepSeek-R1,保持,独立 problem 抽样；排除评测相似题
+G4,inclusionAI/Ling-Coder-SFT,CAT,35000,未公开,保持,分语言 / 任务；自动测试优先；去掉纯 agent 轨迹
+G4,nvidia/OpenCodeInstruct,CAT,30000,未公开,保持,只取 unit_tests 非空、执行成功且 average_test_score=1
+G4,hkust-nlp/CodeIO-PyEdu-Reasoning,CAT,15000,未公开,保持,按程序 / 题目去重；验证 I-O 一致
+G4,KodCode/KodCode-V1-SFT-R1,CAT,10000,DeepSeek-R1,保持,同题其它 KodCode 版本只选一个；保留测试通过的答案
+G5,openbmb/UltraData-SFT-2605 · Knowledge think+no_think,CAT,45000,按上游不同,保持,互斥 uid 为主；模式变体另记同任务
+G5,nvidia/Nemotron-Post-Training-Dataset-v1 · STEM,CAT,30000,DeepSeek-R1-0528 / Qwen3-235B,保持,只选 STEM，禁用 chat；先检查 user 与答案字段完整
+G5,allenai/Dolci-Instruct-SFT · Science,CAT,15000,未统一公开,保持,source / domain 明确；科学事实与问题完整性检查
+G6,allenai/Dolci-Instruct-SFT · Chat / Wildchat,CAT,30000,未统一公开,风格,有效用户问题；语言分层；跨 tulu / smoltalk 去重
+G6,HuggingFaceTB/smoltalk2 · chat / writing,CAT,25000,Qwen3-32B / DeepSeek-V3 等,风格,需支持 think / no_think 模板
+G6,openbmb/UltraData-SFT-2605 · Multi-lang,CAT,15000,按上游不同,风格,非中英语言知识；同题翻译归同 task 族，不双计
+G7,allenai/Dolci-Instruct-SFT · Safety,CAT,18000,未统一公开,风格,WildGuard / WildJailbreak / CoCoNot 分层；正常请求也要保留，防过拒
+G7,nvidia/Llama-Nemotron-Post-Training-Dataset · safety,CAT,7000,多教师混合,风格,"实际安全子集共 31,426；检查语言与过拒倾向"
+G8,开源图文 / 视频 SFT（视觉保持，待选型）,NEW,25000,待定,保持,缺口项：94 库全是纯文本。模型是 VLM，25B token 纯文本 SFT 必掉视觉。必须补，或改为冻结视觉塔 + 合并
+G9,长上下文 QA / 长文摘要（待选型）,NEW,10000,待定,保持,缺口项：保 262K 原生窗口；也可从 A2/A4/A6 的超长轨迹里抽，但需独立评测
